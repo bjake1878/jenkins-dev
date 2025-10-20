@@ -1,11 +1,10 @@
 pipeline {
     agent any
     tools {nodejs "Node-Build"}
-
     stages {
         stage('Installing dependancies') {
             steps {
-                echo 'Installing..npm jasmine'
+                echo 'Installing jasmine'
                 script {
                     sh 'npm install --save-dev jasmine'
                 }
@@ -13,7 +12,7 @@ pipeline {
         }
         stage('Testng nodejs') {
             steps {
-                echo 'Running npm tests....'
+                echo 'Running npm tests'
                 script {
                     sh 'npm test'
                 }
