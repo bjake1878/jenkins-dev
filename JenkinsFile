@@ -3,22 +3,17 @@ pipeline {
     tools {nodejs "Node-Build"}
 
     stages {
-        stage('Cloning') {
+        stage('Installing dependancies') {
             steps {
-                echo 'Building..'
-            }
-        }
-        stage('Dependancies') {
-            steps {
-                echo 'Installing..'
+                echo 'Installing..npm jasmine'
                 script {
                     sh 'npm install --save-dev jasmine'
                 }
             }
         }
-        stage('Testng') {
+        stage('Testng nodejs') {
             steps {
-                echo 'Testing....'
+                echo 'Running npm tests....'
                 script {
                     sh 'npm test'
                 }
