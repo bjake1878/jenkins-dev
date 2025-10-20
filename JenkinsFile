@@ -6,9 +6,6 @@ pipeline {
         stage('Cloning') {
             steps {
                 echo 'Building..'
-                script {
-                    git 'https://github.com/bjake1878/jenkins-dev'
-                }
             }
         }
         stage('Dependancies') {
