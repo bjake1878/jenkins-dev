@@ -10,12 +10,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                response = httpRequest 'http://bjhnsan.bjhn:3888'
-                println("Status: "+response.status)
-                if (response.content == 'HelloWorld!') {
-                    println("Content: "+response.content)
-                } else {
-                    println("Failed")
+                script {
+                    response = httpRequest 'http://bjhnsan.bjhn:3888'
+                    println("Status: "+response.status)
+                    if (response.content == 'HelloWorld!') {
+                        println("Content: "+response.content)
+                    } else {
+                        println("Failed")
+                    }
                 }
             }
         }
