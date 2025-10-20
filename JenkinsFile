@@ -1,29 +1,30 @@
 pipeline {
     agent any
+    tools {nodejs "Node-Build"}
 
     stages {
-        stage('Build') {
+        stage('Cloning') {
             steps {
                 echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
                 script {
-                    response = httpRequest 'http://bjhnsan.bjhn:3888'
-                    println("Status: "+response.status)
-                    if (response.content == 'HelloWorld!') {
-                        println("Content: "+response.content)
-                    } else {
-                        println("Failed")
-                    }
+                    git 'https://github.com/bjake1878/jenkins-dev'
                 }
             }
         }
-        stage('Deploy') {
+        stage('Dependancies') {
             steps {
-                echo 'Deploying....'
+                echo 'Installing..'
+                script {
+                    sh 'npm install --save-dev jasmine'
+                }
+            }
+        }
+        stage('Testng') {
+            steps {
+                echo 'Testing....'
+                script {
+                    sh 'npm test'
+                }
             }
         }
     }
