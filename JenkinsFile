@@ -1,20 +1,45 @@
 pipeline {
-    agent any
-    tools {nodejs "Node-Build"}
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: nodeserver
+spec:
+  containers:
+  - name: nodeserver
+    image: bjake1878/nodejs-app-dev:latest
+    command:
+    - cat
+    tty: true
+        '''
+            retries 2
+        }
+    }
     stages {
-        stage('Installing dependancies') {
+        stage('Clone github repo') {
             steps {
-                echo 'Installing jasmine'
-                script {
-                    sh 'npm install --save-dev jasmine'
+                container('nodeserver') {
+                    echo 'Retrieving latest release...'
+                    sh 'git clone https://github.com/bjake1878/jenkins-dev.git'
                 }
             }
         }
-        stage('Testng nodejs') {
+        stage('Installing jasmine') {
             steps {
-                echo 'Running npm tests'
-                script {
-                    sh 'npm test'
+                container('nodeserver') {
+                    echo 'Installing jasmine...'
+                    sh 'cd jenkins-dev && npm install --save-dev jasmine'
+                }
+            }
+        }
+        stage('Testing nodejs with jasmine') {
+            steps {
+                container('nodeserver') {
+                    echo 'Testing node js application....'
+                    sh 'cd jenkins-dev && npm test'
                 }
             }
         }
